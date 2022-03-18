@@ -24,13 +24,8 @@ class Program
                 Price = 1850
             }
         };
-        
-        foreach(var product in products)
-        {
-            Console.WriteLine(product.ToString());
-            Console.WriteLine(product.ReportAboutPriceWithTaxing(21));
-            System.Console.WriteLine("******");
-        }
 
+        Console.WriteLine(products[0].Name);
+        Console.WriteLine(products[0].ReportAboutPrice(0.20, 0.0));
     }
 }

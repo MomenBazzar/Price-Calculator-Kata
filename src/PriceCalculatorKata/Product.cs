@@ -6,19 +6,20 @@ public class Product
     public int UPC { get; set; }
     public double Price { get; set; }
 
-    public string ReportAboutPriceWithTaxing(int tax)
+    public string ReportAboutPrice(double tax, double discount)
     {
-        return $"Product price reported as {PriceHandler.PriceInDollarsString(Price)} before tax "
-        + $"and {PriceHandler.PriceInDollarsString(this.PriceWithAddedTax(tax))} after {tax}% tax.";
+        string message = $"Product price = {Price.AddTaxAndDiscount(tax, discount).ParseToDollars()}";
+        if (discount > 0)
+            message = message + $" with {Price.CalculateDiscountValue(discount).ParseToDollars()} discount.";
+        
+        return message;
+        
     }
 
-    public double PriceWithAddedTax(int tax)
-    {
-        return Price + (Price * tax / 100);
-    }
+    
 
     public override string ToString()
     {
-        return $"Product name = \"{Name}\", UPC = {UPC}, Price = {PriceHandler.PriceInDollarsString(Price)}";
+        return $"Product name = \"{Name}\", UPC = {UPC}, Price = {Price.ParseToDollars()}";
     }
 }

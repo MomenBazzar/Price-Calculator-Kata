@@ -2,23 +2,37 @@ namespace PriceCalculatorKata;
 
 public class Product
 {
-    public static double Tax { get; set; }
-    public static double Discount { get; set; }
+
+    private static Dictionary<int, float> _speacialDiscounts = new Dictionary<int, float>();
+    public static float Tax { get; set; }
+    public static float Discount { get; set; }
     public string? Name { get; set; }
     public int UPC { get; set; }
     public double Price { get; set; }
     
+    public void updateUPCDiscountTo(float discount)
+    {
+        _speacialDiscounts[UPC] = discount;
+    }
     public string ReportAboutPrice()
     {
-        string message = $"Product price = {Price.AddTaxAndDiscount(Tax, Discount).ParseToDollars()}";
-        if (Discount > 0)
-            message = message + $" with {Price.CalculateDiscountValue(Discount).ParseToDollars()} discount.";
-        
-        return message;
-        
+        float totalDiscount = CalculateTotalDiscount();
+
+        string messageOutput = $"Product price = {Price.AddTaxAndDiscount(Tax, totalDiscount).ParseToDollars()}";
+        if (totalDiscount > 0)
+            messageOutput = messageOutput + $" with {Price.CalculateDiscountValue(totalDiscount).ParseToDollars()} discount.";
+
+        return messageOutput;
+
     }
 
-    
+    private float CalculateTotalDiscount()
+    {
+        float totalDiscount = Discount;
+        if (_speacialDiscounts.ContainsKey(UPC))
+            totalDiscount += _speacialDiscounts[UPC];
+        return totalDiscount;
+    }
 
     public override string ToString()
     {

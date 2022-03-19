@@ -1,8 +1,11 @@
-﻿namespace PriceCalculatorKata;
+﻿using System;
+namespace PriceCalculatorKata;
 class Program
 {
     public static void Main()
     {
+        Product.Tax = 0.20;
+        Product.Discount = 0.15;
         var products = new List<Product>()
         {
             new Product()
@@ -24,8 +27,12 @@ class Program
                 Price = 1850
             }
         };
+        foreach (var product in products)
+        {
+            Console.WriteLine(product.Name);
+            Console.WriteLine(product.ReportAboutPrice());
+            System.Console.WriteLine("===========");
+        }
 
-        Console.WriteLine(products[0].Name);
-        Console.WriteLine(products[0].ReportAboutPrice(0.20, 0.0));
     }
 }

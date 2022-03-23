@@ -6,11 +6,6 @@ public static class PriceHandler
         return price.ToString("C2");
     }
 
-    public static double AddTaxAndDiscount(this double price, double tax, double discount)
-    {
-        return price + price.CalculateTaxValue(tax) - price.CalculateDiscountValue(discount);
-    }
-
     public static double CalculateTaxValue(this double price, double tax)
     {
         return price * tax;

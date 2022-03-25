@@ -19,18 +19,18 @@ class Program
                 UPC = 543,
                 Price = 1120
             },
-            new SpecialProduct()
+            new Product()
             {
                 Name = "Apple MacBook",
                 UPC = 172,
                 Price = 20.25,
-                SpecialDiscount = 0.07f
             }
         };
+        Discount.UpdateUpcDiscount(172, 0.07f);
         foreach (var product in products)
         {
             Console.WriteLine(product.Name);
-            Console.WriteLine(product.ReportAboutPrice());
+            Console.WriteLine(Report.MakeReportAboutProduct(product));
             Console.WriteLine("===========");
         }
 

@@ -2,14 +2,21 @@ namespace PriceCalculatorKata;
 public class Discount
 {
     public static float UniversalDisscount { get; set; }
+    private static Dictionary<int, float> _UpcDiscounts = new Dictionary<int, float>();
 
-    public static double CalculateDiscountValue(double price)
+    public static void UpdateUpcDiscount(int UPC, float discount)
     {
-        return (UniversalDisscount * price);
+        _UpcDiscounts[UPC] = discount;
     }
 
-        public static double CalculateSpecialDiscountValue(double price, float discount)
+    public static double CalculateDiscountValue(Product product)
     {
-        return (discount * price);
+        double discountValue = product.Price * UniversalDisscount;
+        if (_UpcDiscounts.ContainsKey(product.UPC))
+        {
+            discountValue += product.Price * _UpcDiscounts[product.UPC];
+        }
+        return discountValue;
     }
+
 }

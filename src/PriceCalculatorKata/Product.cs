@@ -5,22 +5,25 @@ public class Product
     public string? Name { get; set; }
     public int UPC { get; set; }
     public double Price { get; set; }
-    
+
     public string ReportAboutPrice()
     {
         string messageOutput = $"Product price = {CalculateFinalPrice().ParseToDollars()}";
-        if (Discount.UniversalDisscount > 0)
-            messageOutput += $" with {Discount.CalculateDiscountValue(Price).ParseToDollars()} discount.";
+        var discountValue = Discount.CalculateDiscountValue(this);
+        if (discountValue > 0)
+            messageOutput += $" with {discountValue.ParseToDollars()} discount.";
 
         return messageOutput;
     }
 
     public double CalculateFinalPrice()
     {
-        double finalPrice = Tax.AddTaxToPrice(Price);
-        finalPrice -= Discount.CalculateDiscountValue(Price);
+        double finalPrice = Price;
+        finalPrice += Tax.CalculateTaxValue(Price);
+        finalPrice -= Discount.CalculateDiscountValue(this);
         return finalPrice;
     }
+
 
     public override string ToString()
     {

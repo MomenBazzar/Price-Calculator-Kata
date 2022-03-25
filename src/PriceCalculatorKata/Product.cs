@@ -1,6 +1,6 @@
 namespace PriceCalculatorKata;
 
-public class Product : IProduct
+public class Product
 {
     public string? Name { get; set; }
     public int UPC { get; set; }
@@ -9,17 +9,16 @@ public class Product : IProduct
     public string ReportAboutPrice()
     {
         string messageOutput = $"Product price = {CalculateFinalPrice().ParseToDollars()}";
-        if (IProduct.Discount > 0)
-            messageOutput += $" with {Price.CalculateDiscountValue(IProduct.Discount).ParseToDollars()} discount.";
+        if (Discount.UniversalDisscount > 0)
+            messageOutput += $" with {Discount.CalculateDiscountValue(Price).ParseToDollars()} discount.";
 
         return messageOutput;
     }
 
     public double CalculateFinalPrice()
     {
-        double finalPrice = Price;
-        finalPrice += Price.CalculateTaxValue(IProduct.Tax);
-        finalPrice -= Price.CalculateDiscountValue(IProduct.Discount);
+        double finalPrice = Tax.AddTaxToPrice(Price);
+        finalPrice -= Discount.CalculateDiscountValue(Price);
         return finalPrice;
     }
 

@@ -1,27 +1,25 @@
 namespace PriceCalculatorKata;
-public class SpecialProduct : IProduct
+public class SpecialProduct : Product
 {
-    public string? Name { get; set; }
-    public int UPC { get; set; }
-    public double Price { get; set; }
     public float SpecialDiscount { get; set; }
 
-    public string ReportAboutPrice()
+    new public string ReportAboutPrice()
     {
         string messageOutput = $"Product price = {CalculateFinalPrice().ParseToDollars()}";
-        
-        float totalDiscount = IProduct.Discount + SpecialDiscount;
+
+        double totalDiscount = Discount.CalculateDiscountValue(Price);
+        totalDiscount += Discount.CalculateSpecialDiscountValue(Price, SpecialDiscount);
+
         if (totalDiscount > 0)
-            messageOutput += $" with {Price.CalculateDiscountValue(totalDiscount).ParseToDollars()} discount.";
+            messageOutput += $" with {totalDiscount.ParseToDollars()} discount.";
 
         return messageOutput;
     }
-    public double CalculateFinalPrice()
+    new public double CalculateFinalPrice()
     {
-        double finalPrice = Price;
-        finalPrice += Price.CalculateTaxValue(IProduct.Tax);
-        float totalDiscount = IProduct.Discount + SpecialDiscount;
-        finalPrice -= Price.CalculateDiscountValue(totalDiscount);
+        double finalPrice = Tax.AddTaxToPrice(Price);
+        finalPrice -= Discount.CalculateDiscountValue(Price);
+        finalPrice -= Discount.CalculateSpecialDiscountValue(Price, SpecialDiscount);
         return finalPrice;
     }
 

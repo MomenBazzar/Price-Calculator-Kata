@@ -3,9 +3,9 @@ class Program
 {
     public static void Main()
     {
-        IProduct.Tax = 0.20f;
-        IProduct.Discount = 0.15f;
-        var products = new List<IProduct>()
+        Tax.UniversalTax = 0.20f;
+        Discount.UniversalDisscount = 0.15f;
+        var products = new List<Product>()
         {
             new Product()
             {
@@ -23,7 +23,7 @@ class Program
             {
                 Name = "Apple MacBook",
                 UPC = 172,
-                Price = 1850.25,
+                Price = 20.25,
                 SpecialDiscount = 0.07f
             }
         };

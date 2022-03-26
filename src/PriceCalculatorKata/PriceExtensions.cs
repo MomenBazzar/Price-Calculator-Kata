@@ -1,5 +1,5 @@
 namespace PriceCalculatorKata;
-public static class PriceHandler
+public static class PriceExtensions
 {
     public static string ParseToDollars(this double price)
     {

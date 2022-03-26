@@ -3,9 +3,27 @@ class Program
 {
     public static void Main()
     {
-        Tax.UniversalTax = 0.20f;
-        Discount.UniversalDisscount = 0.15f;
-        var products = new List<Product>()
+        var universalTax = 0.20f;
+        var universalDisscount = 0.15f;
+        var productService = new ProductService(universalTax, universalDisscount);
+        var reporter = new Reporter(productService);
+
+        var products = new List<Product>();
+        FillProductsList(products);
+        
+        productService.discountManager.UpdateUpcDiscount(172, 0.07f);
+        foreach (var product in products)
+        {
+            Console.WriteLine(product.Name);
+            Console.WriteLine(reporter.MakeReportAboutProduct(product));
+            Console.WriteLine("===========");
+        }
+
+    }
+
+    public static void FillProductsList(List<Product> products)
+    {
+        products = new List<Product>()
         {
             new Product()
             {
@@ -26,13 +44,5 @@ class Program
                 Price = 20.25,
             }
         };
-        Discount.UpdateUpcDiscount(172, 0.07f);
-        foreach (var product in products)
-        {
-            Console.WriteLine(product.Name);
-            Console.WriteLine(Report.MakeReportAboutProduct(product));
-            Console.WriteLine("===========");
-        }
-
     }
 }

@@ -10,8 +10,8 @@ public class DiscountManager
     public Discount UniversalDiscount { get; set; }
     private Dictionary<int, Discount> _upcDiscounts;
 
-    public void UpdateUpcDiscount(int upc, Discount discount)
 
+    public void UpdateUpcDiscount(int upc, Discount discount)
     {
         _upcDiscounts[upc] = discount;
     }

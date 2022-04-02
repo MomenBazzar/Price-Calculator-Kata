@@ -5,5 +5,4 @@ public static class PriceExtensions
     {
         return price.ToString("C2");
     }
-
 }

@@ -1,28 +1,44 @@
 namespace PriceCalculatorKata;
 public class DiscountManager
 {
-    public DiscountManager(float universalDisscount)
+    public DiscountManager(Discount universalDisscount)
     {
-        this.UniversalDisscount = universalDisscount;
-        _UpcDiscounts = new Dictionary<int, float>();
+        this.UniversalDiscount = universalDisscount;
+        _upcDiscounts = new Dictionary<int, Discount>();
     }
 
-    public float UniversalDisscount { get; set; }
-    private Dictionary<int, float> _UpcDiscounts;
+    public Discount UniversalDiscount { get; set; }
+    private Dictionary<int, Discount> _upcDiscounts;
 
-    public void UpdateUpcDiscount(int UPC, float discount)
+    public void UpdateUpcDiscount(int upc, Discount discount)
     {
-        _UpcDiscounts[UPC] = discount;
+        _upcDiscounts[upc] = discount;
     }
 
-    public double CalculateDiscountValue(Product product)
+    public double CalculateDiscountBeforeTax(double price, int upc)
     {
-        double discountValue = product.Price * UniversalDisscount;
-        if (_UpcDiscounts.ContainsKey(product.UPC))
-        {
-            discountValue += product.Price * _UpcDiscounts[product.UPC];
-        }
-        return discountValue;
+        double discountBefore = 0;
+
+        if (UniversalDiscount.IsAppliedFirst)
+            discountBefore += price * UniversalDiscount.Value;
+
+        if (_upcDiscounts.ContainsKey(upc) && _upcDiscounts[upc].IsAppliedFirst)
+            discountBefore += price * _upcDiscounts[upc].Value;
+
+        return discountBefore;
+    }
+
+    public double CalculateDiscountAfterTax(double price, int upc)
+    {
+        double discountAfter = 0;
+
+        if (!UniversalDiscount.IsAppliedFirst)
+            discountAfter += price * UniversalDiscount.Value;
+
+        if (_upcDiscounts.ContainsKey(upc) && !_upcDiscounts[upc].IsAppliedFirst)
+            discountAfter += price * _upcDiscounts[upc].Value;
+
+        return discountAfter;
     }
 
 }

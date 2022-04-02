@@ -1,18 +1,30 @@
 namespace PriceCalculatorKata;
 public class ProductService
 {
-    public ProductService(float universalTax, float universalDiscount)
+    public ProductService(float universalTax, Discount universalDiscount)
     {
         taxManager = new TaxManager(universalTax);
         discountManager = new DiscountManager(universalDiscount);
     }
     public DiscountManager discountManager;
     public TaxManager taxManager;
-    public double CalculateFinalPrice(Product product)
+    public List<double> CalculateFinalPriceAndDiscount(Product product)
     {
         double finalPrice = product.Price;
-        finalPrice += taxManager.CalculateTaxValue(product.Price);
-        finalPrice -= discountManager.CalculateDiscountValue(product);
-        return finalPrice;
+        double finalDiscount = 0;
+
+        double discountNow = discountManager.CalculateDiscountBeforeTax(finalPrice, product.UPC);;
+        finalPrice -= discountNow;
+        finalDiscount += discountNow;
+
+        var tax = taxManager.CalculateTaxValue(finalPrice);
+
+        discountNow = discountManager.CalculateDiscountAfterTax(finalPrice, product.UPC);
+        finalPrice -= discountNow;
+        finalDiscount += discountNow;
+
+        finalPrice += tax;
+        
+        return new List<double>(){finalPrice, finalDiscount};
     }
 }

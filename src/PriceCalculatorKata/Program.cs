@@ -4,14 +4,15 @@ class Program
     public static void Main()
     {
         var universalTax = 0.20f;
-        var universalDisscount = 0.15f;
+        var universalDisscount = new Discount(0.15f);
         var productService = new ProductService(universalTax, universalDisscount);
         var reporter = new Reporter(productService);
 
         var products = new List<Product>();
         FillProductsList(products);
-        
-        productService.discountManager.UpdateUpcDiscount(172, 0.07f);
+
+        var newDiscount = new Discount(0.07f, true);
+        productService.discountManager.UpdateUpcDiscount(172, newDiscount);
         foreach (var product in products)
         {
             Console.WriteLine(product.Name);
@@ -23,8 +24,7 @@ class Program
 
     public static void FillProductsList(List<Product> products)
     {
-        products = new List<Product>()
-        {
+        products.AddRange(new[]{
             new Product()
             {
                 Name = "Asus VivoBook",
@@ -43,6 +43,6 @@ class Program
                 UPC = 172,
                 Price = 20.25,
             }
-        };
+        });
     }
 }

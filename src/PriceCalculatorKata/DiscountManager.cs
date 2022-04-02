@@ -4,23 +4,23 @@ public class DiscountManager
     public DiscountManager(float universalDisscount)
     {
         this.UniversalDisscount = universalDisscount;
-        _UpcDiscounts = new Dictionary<int, float>();
+        _upcDiscounts = new Dictionary<int, float>();
     }
 
     public float UniversalDisscount { get; set; }
-    private Dictionary<int, float> _UpcDiscounts;
+    private Dictionary<int, float> _upcDiscounts;
 
-    public void UpdateUpcDiscount(int UPC, float discount)
+    public void UpdateUpcDiscount(int upc, float discount)
     {
-        _UpcDiscounts[UPC] = discount;
+        _upcDiscounts[upc] = discount;
     }
 
     public double CalculateDiscountValue(Product product)
     {
         double discountValue = product.Price * UniversalDisscount;
-        if (_UpcDiscounts.ContainsKey(product.UPC))
+        if (_upcDiscounts.ContainsKey(product.UPC))
         {
-            discountValue += product.Price * _UpcDiscounts[product.UPC];
+            discountValue += product.Price * _upcDiscounts[product.UPC];
         }
         return discountValue;
     }

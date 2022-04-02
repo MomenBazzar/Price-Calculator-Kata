@@ -8,11 +8,14 @@ public class Reporter
     private ProductService _productService;
     public string MakeReportAboutProduct(Product product)
     {
-        string messageOutput = $"Product price = {_productService.CalculateFinalPrice(product).ParseToDollars()}";
+        var priceAndDiscount = _productService.CalculateFinalPriceAndDiscount(product);
+        var finalPrice = priceAndDiscount[0];
+        var finalDiscount = priceAndDiscount[1];
 
-        double totalDiscount = _productService.discountManager.CalculateDiscountValue(product);
-        if (totalDiscount > 0)
-            messageOutput += $" with {totalDiscount.ParseToDollars()} discount.";
+        string messageOutput = $"Product price = {finalPrice.ParseToDollars()}";
+
+        if (finalDiscount > 0)
+            messageOutput += $" with {finalDiscount.ParseToDollars()} discount.";
             
         return messageOutput;
     }

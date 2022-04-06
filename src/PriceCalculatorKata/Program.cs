@@ -16,9 +16,12 @@ class Program
         var products = new List<Product>();
         FillProductsList(products);
 
+        productService.DiscountManager.IsMultiplicativeDisounts = false;
+
         var newDiscount = new Discount(0.07f, isAppliedFirst: false);
-        productService.DiscountManager.IsMultiplicativeDisounts = true;
         productService.DiscountManager.UpdateUpcDiscount(172, newDiscount);
+
+        productService.DiscountsCap = new Cap(4, isPercentage: true);
         foreach (var product in products)
         {
             Console.WriteLine("===========");

@@ -3,21 +3,27 @@ class Program
 {
     public static void Main()
     {
-        var universalTax = 0.20f;
-        var universalDisscount = new Discount(0.15f);
-        var productService = new ProductService(universalTax, universalDisscount);
+        var expensesManager = new ExpensesManager();
+        expensesManager.AddNewExpense(new Expense("Packaging", 0.01, isPercentageAmount: true));
+        expensesManager.AddNewExpense(new Expense("Transport", 2.2));
+        expensesManager.UpdateExpenseAmount("Transport", 2.2);
+        var allCosts = expensesManager.getAllExpensesForPrice(20.25);
+
+        var universalTax = 0.21f;
+        var universalDiscount = new Discount(0.15f);
+        var productService = new ProductService(universalTax, universalDiscount, expensesManager);
         var reporter = new Reporter(productService);
 
         var products = new List<Product>();
         FillProductsList(products);
 
-        var newDiscount = new Discount(0.07f, true);
-        productService.discountManager.UpdateUpcDiscount(172, newDiscount);
+        var newDiscount = new Discount(0.07f, false);
+        productService.DiscountManager.UpdateUpcDiscount(172, newDiscount);
         foreach (var product in products)
         {
-            Console.WriteLine(product.Name);
-            Console.WriteLine(reporter.MakeReportAboutProduct(product));
             Console.WriteLine("===========");
+            Console.WriteLine(product.Name);
+            Console.Write(reporter.ReportPriceWithAllCosts(product));
         }
 
     }

@@ -5,19 +5,41 @@ public class Reporter
     {
         _productService = productService;
     }
+
     private ProductService _productService;
-    public string MakeReportAboutProduct(Product product)
+
+    public string ReportPriceWithAllCosts(Product product)
     {
-        var priceAndDiscount = _productService.CalculateFinalPriceAndDiscount(product);
-        var finalPrice = priceAndDiscount[0];
-        var finalDiscount = priceAndDiscount[1];
+        string message = "";
+        addCostToMessage(ref message, "Price", product.Price);
 
-        string messageOutput = $"Product price = {finalPrice.ParseToDollars()}";
+        var costs = _productService.GetFinalCostsForProduct(product);
 
-        if (finalDiscount > 0)
-            messageOutput += $" with {finalDiscount.ParseToDollars()} discount.";
-            
-        return messageOutput;
+        if (costs["Discount"] > 0)
+            addCostToMessage(ref message, "Discount", costs["Discount"]);
+
+        addCostToMessage(ref message, "Tax", costs["Tax"]);
+
+        AddExpensesOfPriceToMessage(ref message, product.Price);
+
+        addCostToMessage(ref message, "Final Price", costs["Final Price"]);
+
+        return message;
+    }
+
+    private void AddExpensesOfPriceToMessage(ref string message, double price)
+    {
+        var expenses = _productService.ExpensesManager.getAllExpensesForPrice(price);
+        foreach (var expense in expenses)
+        {
+            addCostToMessage(ref message, expense.Key, expense.Value);
+        }
+    }
+
+    private void addCostToMessage(ref string message, string description, double value)
+    {
+        message += $"{description} = {value.ParseToDollars()}\n";
+
     }
 
 }

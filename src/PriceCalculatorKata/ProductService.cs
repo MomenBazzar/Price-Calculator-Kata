@@ -1,30 +1,39 @@
 namespace PriceCalculatorKata;
 public class ProductService
 {
-    public ProductService(float universalTax, Discount universalDiscount)
+    public ProductService(float universalTax, Discount universalDiscount, ExpensesManager costManager)
     {
-        taxManager = new TaxManager(universalTax);
-        discountManager = new DiscountManager(universalDiscount);
+        TaxManager = new TaxManager(universalTax);
+        DiscountManager = new DiscountManager(universalDiscount);
+        ExpensesManager = costManager;
     }
-    public DiscountManager discountManager;
-    public TaxManager taxManager;
-    public List<double> CalculateFinalPriceAndDiscount(Product product)
+    public DiscountManager DiscountManager;
+    public TaxManager TaxManager;
+    public ExpensesManager ExpensesManager;
+    public Dictionary<string, double> GetFinalCostsForProduct(Product product)
     {
-        double finalPrice = product.Price;
-        double finalDiscount = 0;
+        var costs = new Dictionary<string, double>() { 
+            {"Final Price", product.Price},
+            {"Discount", 0},
+            {"Tax", 0}
+        };
 
-        double discountNow = discountManager.CalculateDiscountBeforeTax(finalPrice, product.UPC);;
-        finalPrice -= discountNow;
-        finalDiscount += discountNow;
+        double discountNow = DiscountManager.CalculateDiscountBeforeTax(costs["Final Price"], product.UPC); ;
+        costs["Final Price"] -= discountNow;
+        costs["Discount"] += discountNow;
 
-        var tax = taxManager.CalculateTaxValue(finalPrice);
+        costs["Tax"] = TaxManager.CalculateTaxValue(costs["Final Price"]);
 
-        discountNow = discountManager.CalculateDiscountAfterTax(finalPrice, product.UPC);
-        finalPrice -= discountNow;
-        finalDiscount += discountNow;
+        discountNow = DiscountManager.CalculateDiscountAfterTax(costs["Final Price"], product.UPC);
+        costs["Final Price"] -= discountNow;
+        costs["Discount"] += discountNow;
 
-        finalPrice += tax;
-        
-        return new List<double>(){finalPrice, finalDiscount};
+        costs["Final Price"] += costs["Tax"];
+
+        costs["Final Price"] += ExpensesManager.GetSumOfExpensesForPrice(costs["Final Price"]);
+
+        return costs;
     }
+
+
 }

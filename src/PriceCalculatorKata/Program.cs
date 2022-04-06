@@ -7,7 +7,6 @@ class Program
         expensesManager.AddNewExpense(new Expense("Packaging", 0.01, isPercentageAmount: true));
         expensesManager.AddNewExpense(new Expense("Transport", 2.2));
         expensesManager.UpdateExpenseAmount("Transport", 2.2);
-        var allCosts = expensesManager.getAllExpensesForPrice(20.25);
 
         var universalTax = 0.21f;
         var universalDiscount = new Discount(0.15f);
@@ -17,7 +16,8 @@ class Program
         var products = new List<Product>();
         FillProductsList(products);
 
-        var newDiscount = new Discount(0.07f, false);
+        var newDiscount = new Discount(0.07f, isAppliedFirst: false);
+        productService.DiscountManager.IsMultiplicativeDisounts = true;
         productService.DiscountManager.UpdateUpcDiscount(172, newDiscount);
         foreach (var product in products)
         {

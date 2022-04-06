@@ -11,6 +11,7 @@ public class ProductService
     public TaxManager TaxManager;
     public ExpensesManager ExpensesManager;
     public Cap DiscountsCap = new Cap(double.MaxValue, isPercentage: false);
+
     public Dictionary<string, double> GetFinalCostsForProduct(Product product)
     {
         var costs = new Dictionary<string, double>() { 

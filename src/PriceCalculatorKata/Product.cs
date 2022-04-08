@@ -8,6 +8,6 @@ public class Product
 
     public override string ToString()
     {
-        return $"Product name = \"{Name}\", UPC = {UPC}, Price = {Price.ParseToDollars()}";
+        return $"Product name = \"{Name}\", UPC = {UPC}, Price = {Price}";
     }
 }

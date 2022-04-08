@@ -8,6 +8,8 @@ public class Reporter
         _productService = productService;
     }
 
+    public string Currency = "JPY";
+
     public string ReportPriceWithAllCosts(Product product)
     {
         string message = "";
@@ -39,7 +41,7 @@ public class Reporter
 
     private string AddCostToMessage(string message, string description, double value)
     {
-        message += $"{description} = {value.ParseToDollars()}\n";
+        message += $"{description} = {value.ParseToDollars(Currency)}\n";
         return message;
     }
 

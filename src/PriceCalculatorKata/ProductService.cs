@@ -1,16 +1,19 @@
 namespace PriceCalculatorKata;
 public class ProductService
 {
-    public DiscountManager DiscountManager;
-    public TaxManager TaxManager;
-    public ExpensesManager ExpensesManager;
+    public ProductService(float universalTax, Discount universalDiscount, ExpensesManager expensesManager)
 
-    public ProductService(float universalTax, Discount universalDiscount, ExpensesManager costManager)
     {
         TaxManager = new TaxManager(universalTax);
         DiscountManager = new DiscountManager(universalDiscount);
-        ExpensesManager = costManager;
+        ExpensesManager = expensesManager;
     }
+
+    public DiscountManager DiscountManager;
+    public TaxManager TaxManager;
+    public ExpensesManager ExpensesManager;
+    public Cap DiscountsCap = new Cap(double.MaxValue, isPercentage: false);
+
 
     public Dictionary<string, double> GetFinalCostsForProduct(Product product)
     {
@@ -21,21 +24,31 @@ public class ProductService
         };
 
         double discountNow = DiscountManager.CalculateDiscountBeforeTax(costs[PriceNames.TotalPrice], product.UPC); ;
-        costs[PriceNames.TotalPrice] -= discountNow;
-        costs[PriceNames.Discount] += discountNow;
+        costs[PriceNames.Discount] = CappedDiscount(discountNow, product.Price);
 
-        costs[PriceNames.Tax] = TaxManager.CalculateTaxValue(costs[PriceNames.TotalPrice]);
+        costs[PriceNames.Tax] = TaxManager.CalculateTaxValue(costs[PriceNames.TotalPrice] - costs[PriceNames.Discount]);
 
         discountNow = DiscountManager.CalculateDiscountAfterTax(costs[PriceNames.TotalPrice], product.UPC);
-        costs[PriceNames.TotalPrice] -= discountNow;
-        costs[PriceNames.Discount] += discountNow;
-
+        costs[PriceNames.Discount] = CappedDiscount(discountNow + costs[PriceNames.Discount], product.Price);
+        
+        costs[PriceNames.TotalPrice] -= costs[PriceNames.Discount];
         costs[PriceNames.TotalPrice] += costs[PriceNames.Tax];
-
         costs[PriceNames.TotalPrice] += ExpensesManager.GetSumOfExpensesForPrice(costs[PriceNames.TotalPrice]);
 
         return costs;
     }
 
+    private double CappedDiscount(double discount, double price)
+    {
+        return Math.Min(discount, GetCapValue(price));
+    }
+
+    private double GetCapValue(double price)
+    {
+        if (DiscountsCap.IsPercentage)
+            return DiscountsCap.Value * price;
+        
+        return DiscountsCap.Value;
+    }
 
 }

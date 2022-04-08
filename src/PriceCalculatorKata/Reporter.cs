@@ -1,14 +1,13 @@
 namespace PriceCalculatorKata;
 public class Reporter
 {
+    public string Currency = "JPY";
     private ProductService _productService;
 
     public Reporter(ProductService productService)
     {
         _productService = productService;
     }
-
-    public string Currency = "JPY";
 
     public string ReportPriceWithAllCosts(Product product)
     {

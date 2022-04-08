@@ -1,17 +1,16 @@
 namespace PriceCalculatorKata;
 public class DiscountManager
 {
+    public Discount UniversalDiscount { get; set; }
+    public bool IsMultiplicativeDisounts { get; set; }
+    private Dictionary<int, Discount> _upcDiscounts;
+
     public DiscountManager(Discount universalDisscount, bool isMultiplicativeDisounts = false)
     {
         UniversalDiscount = universalDisscount;
         IsMultiplicativeDisounts = isMultiplicativeDisounts;
         _upcDiscounts = new Dictionary<int, Discount>();
     }
-
-    public Discount UniversalDiscount { get; set; }
-    public bool IsMultiplicativeDisounts { get; set; }
-    private Dictionary<int, Discount> _upcDiscounts;
-
 
     public void UpdateUpcDiscount(int upc, Discount discount)
     {
@@ -47,7 +46,7 @@ public class DiscountManager
     {
         if (IsMultiplicativeDisounts)
             return MultiplicativeDiscount(price, discount1, discount2);
-        
+
         return AdditiveDiscount(price, discount1, discount2);
     }
     private double MultiplicativeDiscount(double price, double discount1, double discount2)
@@ -58,6 +57,6 @@ public class DiscountManager
 
     private double AdditiveDiscount(double price, double discount1, double discount2)
     {
-        return  (price * discount1) + (price * discount2);
+        return (price * discount1) + (price * discount2);
     }
 }

@@ -1,6 +1,12 @@
 namespace PriceCalculatorKata;
 public class ProductService
 {
+    
+    public DiscountManager DiscountManager;
+    public TaxManager TaxManager;
+    public ExpensesManager ExpensesManager;
+    public Cap DiscountsCap = new Cap(double.MaxValue, isPercentage: false);
+    
     public ProductService(float universalTax, Discount universalDiscount, ExpensesManager expensesManager)
 
     {
@@ -8,12 +14,6 @@ public class ProductService
         DiscountManager = new DiscountManager(universalDiscount);
         ExpensesManager = expensesManager;
     }
-
-    public DiscountManager DiscountManager;
-    public TaxManager TaxManager;
-    public ExpensesManager ExpensesManager;
-    public Cap DiscountsCap = new Cap(double.MaxValue, isPercentage: false);
-
 
     public Dictionary<string, double> GetFinalCostsForProduct(Product product)
     {

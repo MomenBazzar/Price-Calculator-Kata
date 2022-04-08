@@ -1,15 +1,14 @@
 namespace PriceCalculatorKata;
 public class DiscountManager
 {
+    public Discount UniversalDiscount { get; set; }
+    private Dictionary<int, Discount> _upcDiscounts;
+
     public DiscountManager(Discount universalDisscount)
     {
         this.UniversalDiscount = universalDisscount;
         _upcDiscounts = new Dictionary<int, Discount>();
     }
-
-    public Discount UniversalDiscount { get; set; }
-    private Dictionary<int, Discount> _upcDiscounts;
-
 
     public void UpdateUpcDiscount(int upc, Discount discount)
     {

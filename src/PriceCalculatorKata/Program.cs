@@ -7,7 +7,7 @@ class Program
         expensesManager.AddNewExpense(new Expense("Packaging", 0.01, isPercentageAmount: true));
         expensesManager.AddNewExpense(new Expense("Transport", 2.2));
         expensesManager.UpdateExpenseAmount("Transport", 2.2);
-        var allCosts = expensesManager.getAllExpensesForPrice(20.25);
+        var allCosts = expensesManager.GetAllExpensesForPrice(20.25);
 
         var universalTax = 0.21f;
         var universalDiscount = new Discount(0.15f);

@@ -1,23 +1,19 @@
 namespace PriceCalculatorKata;
 public class ExpensesManager
 {
+    private List<Expense> _expenses;
+
     public ExpensesManager()
     {
         _expenses = new List<Expense>();
     }
-    private List<Expense> _expenses;
-
     public double GetSumOfExpensesForPrice(double price)
     {
-        double sum = 0;
-        Dictionary<string, double> expenses = getAllExpensesForPrice(price);
-        foreach (var expense in expenses)
-        {
-            sum += expense.Value;
-        }
-        return sum;
+        Dictionary<string, double> expenses = GetAllExpensesForPrice(price);
+        
+        return expenses.Sum(ex => ex.Value);
     }
-    public Dictionary<string, double> getAllExpensesForPrice(double price)
+    public Dictionary<string, double> GetAllExpensesForPrice(double price)
     {
         var expensesAnswer = new Dictionary<string, double>();
         foreach (var expense in _expenses)
@@ -33,7 +29,7 @@ public class ExpensesManager
 
     public void AddNewExpense(Expense expense)
     {
-        if (FindExpenseOrNull(expense.Description) != null)
+        if (FindExpenseByDescription(expense.Description) != null)
             throw new ArgumentException($"an expense with same Description=\"{expense.Description}\" already exists");
 
         _expenses.Add(expense);
@@ -41,22 +37,15 @@ public class ExpensesManager
 
     public void UpdateExpenseAmount(string expenseDescription, double amount)
     {
-        var expenseItem = FindExpenseOrNull(expenseDescription);
+        var expenseItem = FindExpenseByDescription(expenseDescription);
         if (expenseItem == null)
             throw new ArgumentException($"coudn't find an expense with Description=\"{expenseDescription}\"");
 
         expenseItem.Amount = amount;
     }
 
-    private Expense? FindExpenseOrNull(string expenseDescription)
+    private Expense? FindExpenseByDescription(string expenseDescription)
     {
-        foreach (var expense in _expenses)
-        {
-            if (expense.Description.Equals(expenseDescription))
-            {
-                return expense;
-            }
-        }
-        return null;
+        return _expenses.Where(e => e.Description == expenseDescription).FirstOrDefault();
     }
 }
